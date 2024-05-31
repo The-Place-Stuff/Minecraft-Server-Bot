@@ -1,0 +1,12 @@
+{
+    "required": true,
+    "package": "com.theplace.bot.mixin",
+    "compatibilityLevel": "JAVA_21",
+    "mixins": [
+        "PlayerAdvancementsMixin",
+        "PlayerListMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+	}
+}
