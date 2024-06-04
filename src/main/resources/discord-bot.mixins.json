@@ -4,7 +4,9 @@
     "compatibilityLevel": "JAVA_21",
     "mixins": [
         "PlayerAdvancementsMixin",
-        "PlayerListMixin"
+        "PlayerListMixin",
+        "ServerPlayerMixin",
+        "TamableAnimalMixin"
     ],
     "injectors": {
         "defaultRequire": 1
