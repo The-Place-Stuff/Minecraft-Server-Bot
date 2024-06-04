@@ -1,10 +1,11 @@
 package com.theplace.bot.mixin;
 
 import com.theplace.bot.Main;
-import com.theplace.bot.api.DiscordClient;
 import com.theplace.bot.api.EmbedColors;
+import com.theplace.bot.api.IconType;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,7 +24,10 @@ public class PlayerAdvancementsMixin {
     private void broadcastAdvancement(AdvancementHolder advancementHolder, DisplayInfo displayInfo, CallbackInfo ci) {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(EmbedColors.LIGHT_YELLOW);
-        embed.setAuthor(displayInfo.getType().createAnnouncement(advancementHolder, this.player).getString());
+        embed.setAuthor(
+                displayInfo.getType().createAnnouncement(advancementHolder, this.player).getString(), null,
+                IconType.fromRepository("player_advancement")
+        );
         Main.CLIENT.sendEmbed(embed);
     }
 }

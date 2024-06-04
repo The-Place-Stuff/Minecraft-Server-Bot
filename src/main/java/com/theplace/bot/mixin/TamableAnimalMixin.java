@@ -2,6 +2,7 @@ package com.theplace.bot.mixin;
 
 import com.theplace.bot.Main;
 import com.theplace.bot.api.EmbedColors;
+import com.theplace.bot.api.IconType;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.TamableAnimal;
@@ -18,8 +19,7 @@ public class TamableAnimalMixin {
     @Inject(method = "die", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatTracker;getDeathMessage()Lnet/minecraft/network/chat/Component;"))
     private void onTameableDeath(DamageSource damageSource, CallbackInfo ci) {
         EmbedBuilder embed = new EmbedBuilder();
-        // TODO: Unique color and icon.
-        embed.setAuthor($this.getCombatTracker().getDeathMessage().getString());
+        embed.setAuthor($this.getCombatTracker().getDeathMessage().getString(), null, IconType.fromRepository("death"));
         embed.setColor(EmbedColors.DEATH);
 
         Main.CLIENT.sendEmbed(embed);

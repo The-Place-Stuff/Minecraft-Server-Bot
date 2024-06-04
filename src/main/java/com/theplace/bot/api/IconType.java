@@ -12,7 +12,7 @@ public class IconType {
         return "";
     };
 
-    public static String fromUrl(String url) {
-        return url;
+    public static String fromRepository(String path) {
+        return "https://raw.githubusercontent.com/The-Place-Stuff/Minecraft-Server-Bot/main/src/main/resources/assets/the_place_bot/icons/" + path + ".png";
     }
 }

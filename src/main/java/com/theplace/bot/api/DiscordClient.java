@@ -7,16 +7,20 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class DiscordClient {
+public class DiscordClient extends ListenerAdapter {
     private Optional<JDA> connection = Optional.empty();
     private Optional<MinecraftServer> server = Optional.empty();
 
@@ -41,6 +45,7 @@ public class DiscordClient {
         builder.setStatus(OnlineStatus.ONLINE);
         builder.enableIntents(INTENTS);
         builder.setMemberCachePolicy(MemberCachePolicy.ALL);
+        builder.addEventListeners(this);
         this.connection = Optional.of(builder.build());
         this.server = Optional.of(server);
 
@@ -98,5 +103,20 @@ public class DiscordClient {
 
     public boolean isConnected() {
         return this.connection.isPresent();
+    }
+
+    @Override
+    public void onMessageReceived(MessageReceivedEvent event) {
+        if (!event.getChannel().getId().equals(config.textChannel())) return;
+        if (connection.isEmpty()) return;
+
+        Member member = event.getMember();
+
+        if (member == null || member.getId().equals(connection.get().getSelfUser().getId())) return;
+
+        String name = member.getNickname() != null ? member.getNickname() : member.getEffectiveName();
+        Component broadcast = Component.literal(String.format("§9<%s>§r " + event.getMessage().getContentDisplay(), name));
+
+        this.executeInGame(ongoingServer -> ongoingServer.getPlayerList().broadcastSystemMessage(broadcast, false));
     }
 }
