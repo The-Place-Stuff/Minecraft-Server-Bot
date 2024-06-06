@@ -1,7 +1,10 @@
 package com.theplace.bot;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.theplace.bot.api.DiscordClient;
 import com.theplace.bot.api.EmbedColors;
+import com.theplace.bot.api.noteblock.NoteBlockUser;
 import com.theplace.bot.command.DiscordCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.fabricmc.api.ModInitializer;
@@ -14,6 +17,7 @@ import org.slf4j.LoggerFactory;
 public class Main implements ModInitializer {
 	public static final String MOD_ID = "the_place_bot";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	public static final DiscordClient CLIENT = new DiscordClient();
 
 	@Override
