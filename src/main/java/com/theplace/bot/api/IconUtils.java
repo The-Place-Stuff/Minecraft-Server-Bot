@@ -7,7 +7,7 @@ import java.util.function.Function;
 public class IconUtils {
     public static final Function<ServerPlayer, String> FROM_PLAYER = player -> {
         if (player != null) {
-            return "https://crafatar.com/avatars/" + player.getStringUUID();
+            return "https://minotar.net/avatar/" + player.getStringUUID() + "/256.png";
         }
         return "";
     };
