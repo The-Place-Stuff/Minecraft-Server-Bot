@@ -1,11 +1,7 @@
 package com.theplace.bot.api;
 
-import com.google.common.collect.Lists;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.mojang.serialization.JsonOps;
 import com.theplace.bot.Main;
-import com.theplace.bot.api.noteblock.NoteBlockDatabase;
+import com.theplace.bot.api.noteblock.DatabaseUtils;
 import com.theplace.bot.api.noteblock.NoteBlockUser;
 import com.theplace.bot.config.Config;
 import net.dv8tion.jda.api.*;
@@ -17,7 +13,6 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.minecraft.network.chat.Component;
@@ -55,12 +50,12 @@ public class DiscordClient extends ListenerAdapter {
         this.connection = Optional.of(builder.build());
         this.server = Optional.of(server);
 
-        Message message = NoteBlockDatabase.searchFor(config.database());
-        if (message != null) {
-            NoteBlockDatabase.buildFrom(message);
-        }
         try {
             this.connection.get().awaitReady();
+            Message message = DatabaseUtils.searchFor(config.database());
+            if (message != null) {
+                DatabaseUtils.buildFrom(message);
+            }
             return true;
         }
         catch (InterruptedException e) {
@@ -122,12 +117,12 @@ public class DiscordClient extends ListenerAdapter {
             if (channel == null) return;
 
             EmbedBuilder embed = new EmbedBuilder();
-            embed.setAuthor(pet.getCombatTracker().getDeathMessage().getString(), null, IconType.fromRepository("death"));
+            embed.setAuthor(pet.getCombatTracker().getDeathMessage().getString(), null, IconUtils.fromRepository("death"));
             embed.setColor(EmbedColors.DEATH);
             MessageCreateAction message = channel.sendMessageEmbeds(embed.build());
 
             if (pet.getOwner() instanceof ServerPlayer owner) {
-                NoteBlockDatabase.findFrom(owner).ifPresent(user -> message.mentionUsers(user.id()));
+                DatabaseUtils.findFrom(owner).ifPresent(user -> message.addContent("<@" + user.id() + ">"));
             }
             message.queue();
         });
@@ -157,6 +152,8 @@ public class DiscordClient extends ListenerAdapter {
         if (!event.getChannel().getId().equals(config.database().channel())) return;
         if (!event.getMessageId().equals(config.database().message())) return;
 
-        NoteBlockDatabase.buildFrom(event.getMessage());
+        DatabaseUtils.buildFrom(event.getMessage());
+
+        Main.LOGGER.info("Updating ");
     }
 }

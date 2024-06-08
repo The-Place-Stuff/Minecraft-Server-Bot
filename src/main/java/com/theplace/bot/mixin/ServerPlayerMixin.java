@@ -2,7 +2,7 @@ package com.theplace.bot.mixin;
 
 import com.theplace.bot.Main;
 import com.theplace.bot.api.EmbedColors;
-import com.theplace.bot.api.IconType;
+import com.theplace.bot.api.IconUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,7 +20,7 @@ public class ServerPlayerMixin {
     @Inject(method = "die", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastSystemMessage(Lnet/minecraft/network/chat/Component;Z)V"))
     private void broadcastDeath(DamageSource source, CallbackInfo ci) {
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setAuthor($this.getCombatTracker().getDeathMessage().getString(), null, IconType.fromRepository("death"));
+        embed.setAuthor($this.getCombatTracker().getDeathMessage().getString(), null, IconUtils.fromRepository("death"));
         embed.setColor(EmbedColors.DEATH);
 
         Main.CLIENT.sendEmbed(embed);

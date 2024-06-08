@@ -18,10 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class NoteBlockDatabase {
+public class DatabaseUtils {
     public static final List<NoteBlockUser> USERS = Lists.newArrayList();
-
-
 
     public static void buildFrom(Message message) {
         String content = message.getContentRaw();
@@ -30,6 +28,8 @@ public class NoteBlockDatabase {
             List<NoteBlockUser> users = result.getOrThrow().getFirst();
             USERS.clear();
             USERS.addAll(users);
+
+            USERS.forEach(user -> Main.LOGGER.info("User: {}", user.minecraftName()));
         }
         catch (Exception e) {
             Main.LOGGER.error(e.getMessage());

@@ -4,7 +4,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.function.Function;
 
-public class IconType {
+public class IconUtils {
     public static final Function<ServerPlayer, String> FROM_PLAYER = player -> {
         if (player != null) {
             return "https://crafatar.com/avatars/" + player.getStringUUID();
